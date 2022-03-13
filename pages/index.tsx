@@ -6,6 +6,7 @@ import Title from "../components/Title";
 import "tailwindcss/tailwind.css";
 import Block from "../components/ui/Block";
 import Footer from "../components/footer/Footer";
+import ethers from "ethers";
 
 const Home: NextPage = () => {
   const playSong = () => {
@@ -14,6 +15,18 @@ const Home: NextPage = () => {
   const playButton = () => {
     return null;
   };
+
+  // const checkIfWalletIsConnected = async () => {
+  //     try {
+  //       const { ethereum } = window;
+
+  //       if (!ethereum) {
+  //         console.log("Make sure you have metamask!");
+  //         return;
+  //       } else {
+  //         console.log("We have the ethereum object", ethereum);
+  //       }
+
   return (
     <div className="flex-col	">
       <div className="text-center ">
