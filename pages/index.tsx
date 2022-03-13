@@ -7,8 +7,16 @@ import "tailwindcss/tailwind.css";
 import Block from "../components/ui/Block";
 import Footer from "../components/footer/Footer";
 import ethers from "ethers";
+import { MetaMaskInpageProvider } from "@metamask/providers";
+declare global {
+  interface Window {
+    ethereum: MetaMaskInpageProvider;
+  }
+}
 
-const Home: NextPage = () => {
+export interface HomeTypes {}
+
+export const Home = ({}: HomeTypes) => {
   const playSong = () => {
     return null;
   };
@@ -16,16 +24,19 @@ const Home: NextPage = () => {
     return null;
   };
 
-  // const checkIfWalletIsConnected = async () => {
-  //     try {
-  //       const { ethereum } = window;
+  const checkIfWalletIsConnected = async () => {
+    try {
+      const { ethereum } = window;
 
-  //       if (!ethereum) {
-  //         console.log("Make sure you have metamask!");
-  //         return;
-  //       } else {
-  //         console.log("We have the ethereum object", ethereum);
-  //       }
+      if (!ethereum) {
+        console.log("Make sure you have metamask!");
+        return;
+      } else {
+        console.log("We have the ethereum object", ethereum);
+      }
+    } finally {
+    }
+  };
 
   return (
     <div className="flex-col	">
