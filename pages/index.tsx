@@ -24,6 +24,7 @@ export const Home = ({}: HomeTypes) => {
     return null;
   };
 
+  //Checks if wallet is connected to MetaMask
   const checkIfWalletIsConnected = async () => {
     try {
       const { ethereum } = window;
