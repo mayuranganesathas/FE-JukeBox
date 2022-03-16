@@ -91,10 +91,13 @@ export const Home = ({}: HomeTypes) => {
         );
 
         let linkTxn = await jukeBoxContract.jukeBoxPlay(submitLink);
+        let linkHistory = await jukeBoxContract.getJukeBoxData();
+
         console.log("Mining...", linkTxn.hash);
 
         await linkTxn.wait();
         console.log("Mined!", linkTxn.hash);
+        console.log(JSON.stringify(linkHistory));
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -118,6 +121,8 @@ export const Home = ({}: HomeTypes) => {
       )}
       <div className="text-center justify-center">
         <Block playButton={playSong} />{" "}
+      </div>
+      <div className="flex">
         <input
           className="bg-gray-200"
           placeholder="Input Spotify Link"
