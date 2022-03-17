@@ -6,6 +6,8 @@ import Footer from "../components/footer/Footer";
 import { ethers } from "ethers";
 import abi from "../utils/JukeBoxData.json";
 import { MetaMaskInpageProvider } from "@metamask/providers";
+import { useRouter } from "next/router";
+
 declare global {
   interface Window {
     ethereum: MetaMaskInpageProvider;
@@ -15,7 +17,9 @@ declare global {
 export interface HomeTypes {}
 export const Home = ({}: HomeTypes) => {
   const [currentAccount, setCurrentAccount] = useState("");
+  //Spotify raw song link is submitted
   const [submitLink, setSubmitLink] = useState("");
+  const [spotifyResponse, setSpotifyResponse] = useState({});
   const contractAddress = "0x8DeeC618262Fa586293E20B4400505b2a6598fF3";
   const contractABI = abi.abi;
   const playSong = () => {
@@ -24,6 +28,26 @@ export const Home = ({}: HomeTypes) => {
   const playButton = () => {
     return null;
   };
+  const accessToken = `BQCiSLftRweU6bvRaHpsQ68IwVWp3mAw16oNR2V8XdrnsQjPs8V9LO7C8us3kqAGskjDZ5e0KS47 -
+   GFvKeBZFJjH6MQJJEw0tHnvnQPnAOnlpJMjyhlDxwYCrto66FFiG8cs9e7x41vECa54`;
+  //Fetches spotify data and stores in relevant object
+  // const fetchSpotifyData = async () => {
+  //   await fetch(`https://open.spotify.com/track/15OlC497ScJt9N2BS8lOev`, {
+  //     method: "GET",
+  //     headers: {
+  //       Accept: "application/json",
+  //       Content-Type: "application/json",
+  //       Authorization: `Bearer + ${accessToken}`,
+  //     },
+  //   })
+  //     .then((data) => {
+  //       console.log("Success:", data);
+  //       setSpotifyResponse(data);
+  //     })
+  //     .catch((error) => {
+  //       console.log("NOT WORKING", error);
+  //     });
+  // };
 
   //Checks if wallet is connected to MetaMask
   const checkIfWalletIsConnected = async () => {
@@ -68,46 +92,48 @@ export const Home = ({}: HomeTypes) => {
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]);
     } catch (error) {
-      console.log(error);
+      console.log("NOT WORKING", error);
     }
   };
 
   const submitLinkForm = () => {
-    submitSong();
-    setSubmitLink("");
+    // submitSong();
+    // fetchSpotifyData();
+    // setSubmitLink("");
   };
 
-  const submitSong = async () => {
-    try {
-      const { ethereum } = window;
+  // const submitSong = async () => {
+  //   try {
+  //     const { ethereum } = window;
 
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum as any);
-        const signer = provider.getSigner();
-        const jukeBoxContract = new ethers.Contract(
-          contractAddress,
-          contractABI,
-          signer
-        );
+  //     if (ethereum) {
+  //       const provider = new ethers.providers.Web3Provider(ethereum as any);
+  //       const signer = provider.getSigner();
+  //       const jukeBoxContract = new ethers.Contract(
+  //         contractAddress,
+  //         contractABI,
+  //         signer
+  //       );
 
-        let linkTxn = await jukeBoxContract.jukeBoxPlay(submitLink);
-        let linkHistory = await jukeBoxContract.getJukeBoxData();
+  //       let linkTxn = await jukeBoxContract.jukeBoxPlay(submitLink);
+  //       let linkHistory = await jukeBoxContract.getJukeBoxData();
 
-        console.log("Mining...", linkTxn.hash);
+  //       console.log("Mining...", linkTxn.hash);
 
-        await linkTxn.wait();
-        console.log("Mined!", linkTxn.hash);
-        console.log(JSON.stringify(linkHistory));
-      } else {
-        console.log("Ethereum object doesn't exist!");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //       await linkTxn.wait();
+  //       console.log("Mined!", linkTxn.hash);
+  //       console.log(JSON.stringify(linkHistory));
+  //     } else {
+  //       console.log("Ethereum object doesn't exist!");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <div className="flex-col	">
+      {JSON.stringify(spotifyResponse + "test" + submitLink)}
       <div className="text-center ">
         <Title />
       </div>
