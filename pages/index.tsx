@@ -28,30 +28,31 @@ export const Home = ({}: HomeTypes) => {
   const playButton = () => {
     return null;
   };
-  const accessToken = `Bearer BQCiSLftRweU6bvRaHpsQ68IwVWp3mAw16oNR2V8XdrnsQjPs8V9LO7C8us3kqAGskjDZ5e0KS47 -
+  const accessToken = `BQCiSLftRweU6bvRaHpsQ68IwVWp3mAw16oNR2V8XdrnsQjPs8V9LO7C8us3kqAGskjDZ5e0KS47 -
    GFvKeBZFJjH6MQJJEw0tHnvnQPnAOnlpJMjyhlDxwYCrto66FFiG8cs9e7x41vECa54`;
   // Fetches spotify data and stores in relevant object
 
-  // const fetchSpotifyData = async () => {
-  //   await fetch(`https://open.spotify.com/track/15OlC497ScJt9N2BS8lOev`, {
-  //     method: "GET",
-  //     headers: {
-  //       " Accept": "application/json",
-  //       "Content-Type": "application/json",
-  //       Authorization: `${accessToken}`,
-  //     },
-  //   })
-  //     .then((data) => {
-  //       console.log("Success:", data);
-  //       setSpotifyResponse(data);
-  //     })
-  //     .catch((error) => {
-  //       console.log("NOT WORKING", error);
-  //     });
-  // };
+  const fetchSpotifyData = async () => {
+    await fetch(`https://api.spotify.com/v1/tracks/194U52vElkbmFe8QTefrgw`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer +${process.env.SPOTIFY_API_KEY}`,
+      },
+    })
+      .then((response) => response.json())
+
+      .then((data) => {
+        console.log("Success:", data);
+        setSpotifyResponse(data);
+      })
+      .catch((error) => {
+        console.log("NOT WORKING", error);
+      });
+  };
 
   //Checks if wallet is connected to MetaMask
-  //git commit change test
   const checkIfWalletIsConnected = async () => {
     try {
       const { ethereum } = window;
@@ -103,7 +104,7 @@ export const Home = ({}: HomeTypes) => {
 
   const submitLinkForm = () => {
     // submitSong();
-    // fetchSpotifyData();
+    fetchSpotifyData();
     // setSubmitLink("");
   };
 
