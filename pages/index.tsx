@@ -51,6 +51,7 @@ export const Home = ({}: HomeTypes) => {
   // };
 
   //Checks if wallet is connected to MetaMask
+  //git commit change test
   const checkIfWalletIsConnected = async () => {
     try {
       const { ethereum } = window;
