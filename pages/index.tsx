@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Title from "../components/Title";
 import "tailwindcss/tailwind.css";
 import Block from "../components/ui/Block";
@@ -7,7 +7,7 @@ import { ethers } from "ethers";
 import abi from "../utils/JukeBoxData.json";
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import { useRouter } from "next/router";
-
+import { BlockDummyData } from "../pages/api/dummyData";
 declare global {
   interface Window {
     ethereum: MetaMaskInpageProvider;
@@ -28,16 +28,17 @@ export const Home = ({}: HomeTypes) => {
   const playButton = () => {
     return null;
   };
-  const accessToken = `BQCiSLftRweU6bvRaHpsQ68IwVWp3mAw16oNR2V8XdrnsQjPs8V9LO7C8us3kqAGskjDZ5e0KS47 -
+  const accessToken = `Bearer BQCiSLftRweU6bvRaHpsQ68IwVWp3mAw16oNR2V8XdrnsQjPs8V9LO7C8us3kqAGskjDZ5e0KS47 -
    GFvKeBZFJjH6MQJJEw0tHnvnQPnAOnlpJMjyhlDxwYCrto66FFiG8cs9e7x41vECa54`;
-  //Fetches spotify data and stores in relevant object
+  // Fetches spotify data and stores in relevant object
+
   // const fetchSpotifyData = async () => {
   //   await fetch(`https://open.spotify.com/track/15OlC497ScJt9N2BS8lOev`, {
   //     method: "GET",
   //     headers: {
-  //       Accept: "application/json",
-  //       Content-Type: "application/json",
-  //       Authorization: `Bearer + ${accessToken}`,
+  //       " Accept": "application/json",
+  //       "Content-Type": "application/json",
+  //       Authorization: `${accessToken}`,
   //     },
   //   })
   //     .then((data) => {
@@ -75,6 +76,9 @@ export const Home = ({}: HomeTypes) => {
       console.log(error);
     }
   };
+  useEffect(() => {
+    checkIfWalletIsConnected();
+  }, []);
 
   const connectWallet = async () => {
     try {
@@ -146,7 +150,13 @@ export const Home = ({}: HomeTypes) => {
         </button>
       )}
       <div className="text-center justify-center">
-        <Block playButton={playSong} />{" "}
+        <Block
+          backgroundImageSrc={BlockDummyData.backgroundImageSrc}
+          songTitle={BlockDummyData.songTitle}
+          artistName={BlockDummyData.artistName}
+          transactionId={BlockDummyData.transactionId}
+          playButton={() => BlockDummyData.playButton()}
+        />{" "}
       </div>
       <div className="flex">
         <input
@@ -165,7 +175,13 @@ export const Home = ({}: HomeTypes) => {
       </div>
       <div className="bg-gray-500 w-full h-full">
         <Footer />
-        <Block playButton={playButton} />{" "}
+        <Block
+          backgroundImageSrc={BlockDummyData.backgroundImageSrc}
+          songTitle={BlockDummyData.songTitle}
+          artistName={BlockDummyData.artistName}
+          transactionId={BlockDummyData.transactionId}
+          playButton={() => BlockDummyData.playButton()}
+        />{" "}
       </div>
     </div>
   );
