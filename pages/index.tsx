@@ -31,8 +31,15 @@ export const Home = ({}: HomeTypes) => {
   };
 
   const spotifyIdParser = () => {
-    let spotifyId = new URL(submitLink);
-    return spotifyId.pathname.split("track/").slice(1);
+    try {
+      let spotifyId = new URL(submitLink);
+      return spotifyId.pathname.split("track/").slice(1);
+    } catch (error) {
+      console.log(error);
+      alert(
+        "Incorrect Spotify Link, Try ` https://open.spotify.com/track/15OlC497ScJt9N2BS8lOev?si=f99d587b90644e30` "
+      );
+    }
   };
 
   //Fetches spotify data and stores in response state variable
@@ -51,7 +58,10 @@ export const Home = ({}: HomeTypes) => {
         setSpotifyResponse(data);
       })
       .catch((error) => {
-        console.log("NOT WORKING", error);
+        alert(
+          "Incorrect Spotify Link, Try ` https://open.spotify.com/track/15OlC497ScJt9N2BS8lOev?si=f99d587b90644e30` "
+        );
+        console.log(error);
       });
   };
 
