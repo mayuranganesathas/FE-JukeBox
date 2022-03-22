@@ -42,7 +42,7 @@ export const Home = ({}: HomeTypes) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: process.env.NEXT_PUBLIC_SPOTIFY_API_KEY,
+        Authorization: `${process.env.NEXT_PUBLIC_SPOTIFY_API_KEY}`,
       },
     })
       .then((response) => response.json())
@@ -78,7 +78,7 @@ export const Home = ({}: HomeTypes) => {
         console.log("No authorized account found");
       }
     } catch (error) {
-      console.log(error);
+      window.Error("Not Working");
     }
   };
   useEffect(() => {
