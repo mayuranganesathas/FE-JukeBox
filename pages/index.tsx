@@ -22,27 +22,30 @@ export const Home = ({}: HomeTypes) => {
   const [spotifyResponse, setSpotifyResponse] = useState({});
   const contractAddress = "0x8DeeC618262Fa586293E20B4400505b2a6598fF3";
   const contractABI = abi.abi;
+
   const playSong = () => {
     return null;
   };
   const playButton = () => {
     return null;
   };
-  const accessToken = `BQCiSLftRweU6bvRaHpsQ68IwVWp3mAw16oNR2V8XdrnsQjPs8V9LO7C8us3kqAGskjDZ5e0KS47 -
-   GFvKeBZFJjH6MQJJEw0tHnvnQPnAOnlpJMjyhlDxwYCrto66FFiG8cs9e7x41vECa54`;
-  // Fetches spotify data and stores in relevant object
 
+  const spotifyIdParser = () => {
+    let spotifyId = new URL(submitLink);
+    return spotifyId.pathname.split("track/").slice(1);
+  };
+
+  //Fetches spotify data and stores in response state variable
   const fetchSpotifyData = async () => {
-    await fetch(`https://api.spotify.com/v1/tracks/194U52vElkbmFe8QTefrgw`, {
+    await fetch(`https://api.spotify.com/v1/tracks/${spotifyIdParser()}`, {
       method: "GET",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Bearer +${process.env.SPOTIFY_API_KEY}`,
+        Authorization: process.env.NEXT_PUBLIC_SPOTIFY_API_KEY,
       },
     })
       .then((response) => response.json())
-
       .then((data) => {
         console.log("Success:", data);
         setSpotifyResponse(data);
@@ -139,7 +142,6 @@ export const Home = ({}: HomeTypes) => {
 
   return (
     <div className="flex-col	">
-      {JSON.stringify(spotifyResponse + "test" + submitLink)}
       <div className="text-center ">
         <Title />
       </div>
