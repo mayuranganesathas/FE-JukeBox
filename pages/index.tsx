@@ -17,12 +17,12 @@ declare global {
 export interface HomeTypes {}
 export const Home = ({}: HomeTypes) => {
   const [currentAccount, setCurrentAccount] = useState("");
-  //Spotify raw song link is submitted
   const [submitLink, setSubmitLink] = useState("");
   const [spotifyResponse, setSpotifyResponse] = useState({});
   const contractAddress = "0x8DeeC618262Fa586293E20B4400505b2a6598fF3";
   const contractABI = abi.abi;
 
+  //TODO: PLAY SONG WHEN PLAY BUTTON IS CLICKED
   const playSong = () => {
     return null;
   };
@@ -115,41 +115,44 @@ export const Home = ({}: HomeTypes) => {
     }
   };
 
-  const submitLinkForm = () => {
-    // submitSong();
-    fetchSpotifyData();
-    // setSubmitLink("");
+  const submitLinkForm = async () => {
+    await fetchSpotifyData();
+    submitSong();
+    setSubmitLink("");
   };
 
-  // const submitSong = async () => {
-  //   try {
-  //     const { ethereum } = window;
+  // TODO: PASS DATA FROM FETCH REQ TO submitSong() to store in contract
 
-  //     if (ethereum) {
-  //       const provider = new ethers.providers.Web3Provider(ethereum as any);
-  //       const signer = provider.getSigner();
-  //       const jukeBoxContract = new ethers.Contract(
-  //         contractAddress,
-  //         contractABI,
-  //         signer
-  //       );
+  const submitSong = async () => {
+    try {
+      const { ethereum } = window;
 
-  //       let linkTxn = await jukeBoxContract.jukeBoxPlay(submitLink);
-  //       let linkHistory = await jukeBoxContract.getJukeBoxData();
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum as any);
+        const signer = provider.getSigner();
+        const jukeBoxContract = new ethers.Contract(
+          contractAddress,
+          contractABI,
+          signer
+        );
 
-  //       console.log("Mining...", linkTxn.hash);
+        let linkTxn = await jukeBoxContract.jukeBoxPlay(submitLink);
+        let linkHistory = await jukeBoxContract.getJukeBoxData();
 
-  //       await linkTxn.wait();
-  //       console.log("Mined!", linkTxn.hash);
-  //       console.log(JSON.stringify(linkHistory));
-  //     } else {
-  //       console.log("Ethereum object doesn't exist!");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+        console.log("Mining...", linkTxn.hash);
 
+        await linkTxn.wait();
+        console.log("Mined!", linkTxn.hash);
+        console.log(JSON.stringify(linkHistory));
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //TODO: Refresh page after new addition of song
   return (
     <div className="flex-col	">
       <div className="text-center ">
@@ -164,6 +167,7 @@ export const Home = ({}: HomeTypes) => {
         </button>
       )}
       <div className="text-center justify-center">
+        {/* TODO: Pull data from contract and  map/populate blocks */}
         <Block
           backgroundImageSrc={BlockDummyData.backgroundImageSrc}
           songTitle={BlockDummyData.songTitle}

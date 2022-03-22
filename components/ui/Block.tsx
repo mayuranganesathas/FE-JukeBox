@@ -13,6 +13,7 @@ export const Block = ({
   artistName,
   transactionId,
 }: BlockProps) => {
+  //TODO: Fix responsive sizing for datas
   return (
     <div className=" flex justify-center py-4 flex-wrap">
       <div className="w-56 h-1/2 border-8 border-black border-dotted">
