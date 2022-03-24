@@ -31,7 +31,7 @@ export const Home = ({}: HomeTypes) => {
     artists: [""],
     songLink: "",
   });
-  const contractAddress = "0x8DeeC618262Fa586293E20B4400505b2a6598fF3";
+  const contractAddress = "0xE09d71a1c44f51B847D3EcB2cAFf47aFB8Da3923";
   const contractABI = abi.abi;
   //object to be sent to the smart contract
   let spotifySongOb = {
@@ -141,7 +141,7 @@ export const Home = ({}: HomeTypes) => {
 
   const submitLinkForm = async () => {
     await fetchSpotifyData();
-    await submitSong(
+    submitSong(
       submitLink,
       spotifyResponse.album.images[0].url,
       spotifyResponse.name,
@@ -187,7 +187,7 @@ export const Home = ({}: HomeTypes) => {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
-      console.log(error);
+      console.log("error", error);
     }
   };
 
@@ -220,6 +220,7 @@ export const Home = ({}: HomeTypes) => {
           className="bg-gray-200"
           placeholder="Input Spotify Link"
           type="text"
+          value={submitLink}
           onChange={(e) => setSubmitLink(e.target.value)}
         />
         <button
