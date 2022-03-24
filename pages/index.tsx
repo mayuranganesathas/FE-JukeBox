@@ -18,6 +18,7 @@ interface SpotifyData {
   album: any;
   name: any;
   artists: any;
+  songLink: any;
 }
 
 export interface HomeTypes {}
@@ -28,6 +29,7 @@ export const Home = ({}: HomeTypes) => {
     album: "",
     name: "",
     artists: [""],
+    songLink: "",
   });
   const contractAddress = "0x8DeeC618262Fa586293E20B4400505b2a6598fF3";
   const contractABI = abi.abi;
@@ -36,6 +38,7 @@ export const Home = ({}: HomeTypes) => {
     albumImage: "", // holds place for album image
     songTitle: "", //holds place for song title
     artistName: "", //holds place for artist name
+    songLink: "",
   };
 
   //TODO: PLAY SONG WHEN PLAY BUTTON IS CLICKED
@@ -76,6 +79,7 @@ export const Home = ({}: HomeTypes) => {
         spotifySongOb.albumImage = spotifyResponse.album.images[0].url;
         spotifySongOb.songTitle = spotifyResponse.name;
         spotifySongOb.artistName = spotifyResponse.artists[0].name;
+        spotifySongOb.songLink = submitLink;
       })
       .catch((error) => {
         alert(
@@ -137,13 +141,13 @@ export const Home = ({}: HomeTypes) => {
 
   const submitLinkForm = async () => {
     await fetchSpotifyData();
-    await submitSong();
+    await submitSong(spotifySongOb);
     setSubmitLink("");
   };
 
   // TODO: PASS DATA FROM FETCH REQ TO submitSong() to store in contract
 
-  const submitSong = async () => {
+  const submitSong = async (songObj: {}) => {
     try {
       const { ethereum } = window;
 
@@ -156,7 +160,7 @@ export const Home = ({}: HomeTypes) => {
           signer
         );
 
-        let linkTxn = await jukeBoxContract.jukeBoxPlay(spotifySongOb);
+        let linkTxn = await jukeBoxContract.jukeBoxPlay(songObj);
         let linkHistory = await jukeBoxContract.getJukeBoxData();
 
         console.log("Mining...", linkTxn.hash);
