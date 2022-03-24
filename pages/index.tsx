@@ -14,13 +14,29 @@ declare global {
   }
 }
 
+interface SpotifyData {
+  album: any;
+  name: any;
+  artists: any;
+}
+
 export interface HomeTypes {}
 export const Home = ({}: HomeTypes) => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [submitLink, setSubmitLink] = useState("");
-  const [spotifyResponse, setSpotifyResponse] = useState({});
+  const [spotifyResponse, setSpotifyResponse] = useState<SpotifyData>({
+    album: "",
+    name: "",
+    artists: [""],
+  });
   const contractAddress = "0x8DeeC618262Fa586293E20B4400505b2a6598fF3";
   const contractABI = abi.abi;
+  //object to be sent to the smart contract
+  let spotifySongOb = {
+    albumImage: "", // holds place for album image
+    songTitle: "", //holds place for song title
+    artistName: "", //holds place for artist name
+  };
 
   //TODO: PLAY SONG WHEN PLAY BUTTON IS CLICKED
   const playSong = () => {
@@ -41,6 +57,7 @@ export const Home = ({}: HomeTypes) => {
       );
     }
   };
+  // TODO https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
 
   //Fetches spotify data and stores in response state variable
   const fetchSpotifyData = async () => {
@@ -56,6 +73,9 @@ export const Home = ({}: HomeTypes) => {
       .then((data) => {
         console.log("Success:", data);
         setSpotifyResponse(data);
+        spotifySongOb.albumImage = spotifyResponse.album.images[0].url;
+        spotifySongOb.songTitle = spotifyResponse.name;
+        spotifySongOb.artistName = spotifyResponse.artists[0].name;
       })
       .catch((error) => {
         alert(
@@ -117,7 +137,7 @@ export const Home = ({}: HomeTypes) => {
 
   const submitLinkForm = async () => {
     await fetchSpotifyData();
-    submitSong();
+    await submitSong();
     setSubmitLink("");
   };
 
@@ -136,7 +156,7 @@ export const Home = ({}: HomeTypes) => {
           signer
         );
 
-        let linkTxn = await jukeBoxContract.jukeBoxPlay(submitLink);
+        let linkTxn = await jukeBoxContract.jukeBoxPlay(spotifySongOb);
         let linkHistory = await jukeBoxContract.getJukeBoxData();
 
         console.log("Mining...", linkTxn.hash);
@@ -193,13 +213,6 @@ export const Home = ({}: HomeTypes) => {
       </div>
       <div className="bg-gray-500 w-full h-full">
         <Footer />
-        <Block
-          backgroundImageSrc={BlockDummyData.backgroundImageSrc}
-          songTitle={BlockDummyData.songTitle}
-          artistName={BlockDummyData.artistName}
-          transactionId={BlockDummyData.transactionId}
-          playButton={() => BlockDummyData.playButton()}
-        />{" "}
       </div>
     </div>
   );
