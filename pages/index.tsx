@@ -31,7 +31,7 @@ export const Home = ({}: HomeTypes) => {
     artists: [""],
     songLink: "",
   });
-  const contractAddress = "0xE09d71a1c44f51B847D3EcB2cAFf47aFB8Da3923";
+  const contractAddress = "0x82e5AfBD14C61a936119c6Db0f4a24cBBaC1C9BB";
   const contractABI = abi.abi;
   //object to be sent to the smart contract
   let spotifySongOb = {
@@ -76,7 +76,7 @@ export const Home = ({}: HomeTypes) => {
       .then((data) => {
         console.log("Success:", data);
         setSpotifyResponse(data);
-        spotifySongOb.albumImage = spotifyResponse.album.images[0].url;
+        // spotifySongOb.albumImage = spotifyResponse.album.images[0].url;
         spotifySongOb.songTitle = spotifyResponse.name;
         spotifySongOb.artistName = spotifyResponse.artists[0].name;
         spotifySongOb.songLink = submitLink;
@@ -138,14 +138,14 @@ export const Home = ({}: HomeTypes) => {
       console.log("NOT WORKING", error);
     }
   };
+  //error error TypeError: str.charCodeAt is not a function
 
   const submitLinkForm = async () => {
     await fetchSpotifyData();
     submitSong(
-      submitLink,
-      spotifyResponse.album.images[0].url,
-      spotifyResponse.name,
-      spotifyResponse.artists
+      submitLink.toString(),
+      spotifyResponse.name.toString(),
+      spotifyResponse.artists.toString()
     ); // send song obj
     setSubmitLink("");
   };
@@ -154,7 +154,6 @@ export const Home = ({}: HomeTypes) => {
 
   const submitSong = async (
     songLink: string,
-    albumImage: string,
     songTitle: string,
     artistName: string
   ) => {
@@ -172,10 +171,9 @@ export const Home = ({}: HomeTypes) => {
 
         let linkTxn = await jukeBoxContract.jukeBoxPlay(
           songLink,
-          albumImage,
           songTitle,
           artistName
-        ); // song obj
+        );
         let linkHistory = await jukeBoxContract.getJukeBoxData();
 
         console.log("Mining...", linkTxn.hash);
