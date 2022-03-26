@@ -14,13 +14,32 @@ declare global {
   }
 }
 
+interface SpotifyData {
+  album: any;
+  name: any;
+  artists: any;
+  songLink: any;
+}
+
 export interface HomeTypes {}
 export const Home = ({}: HomeTypes) => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [submitLink, setSubmitLink] = useState("");
-  const [spotifyResponse, setSpotifyResponse] = useState({});
-  const contractAddress = "0x8DeeC618262Fa586293E20B4400505b2a6598fF3";
+  const [spotifyResponse, setSpotifyResponse] = useState<SpotifyData>({
+    album: "",
+    name: "",
+    artists: [""],
+    songLink: "",
+  });
+  const contractAddress = "0x82e5AfBD14C61a936119c6Db0f4a24cBBaC1C9BB";
   const contractABI = abi.abi;
+  //object to be sent to the smart contract
+  let spotifySongOb = {
+    albumImage: "", // holds place for album image
+    songTitle: "", //holds place for song title
+    artistName: "", //holds place for artist name
+    songLink: "", //holds the spotify link to the song
+  };
 
   //TODO: PLAY SONG WHEN PLAY BUTTON IS CLICKED
   const playSong = () => {
@@ -41,6 +60,7 @@ export const Home = ({}: HomeTypes) => {
       );
     }
   };
+  // TODO https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
 
   //Fetches spotify data and stores in response state variable
   const fetchSpotifyData = async () => {
@@ -56,6 +76,10 @@ export const Home = ({}: HomeTypes) => {
       .then((data) => {
         console.log("Success:", data);
         setSpotifyResponse(data);
+        // spotifySongOb.albumImage = spotifyResponse.album.images[0].url;
+        spotifySongOb.songTitle = spotifyResponse.name;
+        spotifySongOb.artistName = spotifyResponse.artists[0].name;
+        spotifySongOb.songLink = submitLink;
       })
       .catch((error) => {
         alert(
@@ -114,16 +138,25 @@ export const Home = ({}: HomeTypes) => {
       console.log("NOT WORKING", error);
     }
   };
+  //error error TypeError: str.charCodeAt is not a function
 
   const submitLinkForm = async () => {
     await fetchSpotifyData();
-    submitSong();
+    submitSong(
+      submitLink.toString(),
+      spotifyResponse.name.toString(),
+      spotifyResponse.artists.toString()
+    ); // send song obj
     setSubmitLink("");
   };
 
-  // TODO: PASS DATA FROM FETCH REQ TO submitSong() to store in contract
+  // TODO: PASS DATA FROM FETCH REQ TO submitSong() to store in contract, send individual variables as to save on gas.
 
-  const submitSong = async () => {
+  const submitSong = async (
+    songLink: string,
+    songTitle: string,
+    artistName: string
+  ) => {
     try {
       const { ethereum } = window;
 
@@ -136,7 +169,11 @@ export const Home = ({}: HomeTypes) => {
           signer
         );
 
-        let linkTxn = await jukeBoxContract.jukeBoxPlay(submitLink);
+        let linkTxn = await jukeBoxContract.jukeBoxPlay(
+          songLink,
+          songTitle,
+          artistName
+        );
         let linkHistory = await jukeBoxContract.getJukeBoxData();
 
         console.log("Mining...", linkTxn.hash);
@@ -148,7 +185,7 @@ export const Home = ({}: HomeTypes) => {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
-      console.log(error);
+      console.log("error", error);
     }
   };
 
@@ -181,6 +218,7 @@ export const Home = ({}: HomeTypes) => {
           className="bg-gray-200"
           placeholder="Input Spotify Link"
           type="text"
+          value={submitLink}
           onChange={(e) => setSubmitLink(e.target.value)}
         />
         <button
@@ -193,13 +231,6 @@ export const Home = ({}: HomeTypes) => {
       </div>
       <div className="bg-gray-500 w-full h-full">
         <Footer />
-        <Block
-          backgroundImageSrc={BlockDummyData.backgroundImageSrc}
-          songTitle={BlockDummyData.songTitle}
-          artistName={BlockDummyData.artistName}
-          transactionId={BlockDummyData.transactionId}
-          playButton={() => BlockDummyData.playButton()}
-        />{" "}
       </div>
     </div>
   );
