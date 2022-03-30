@@ -138,7 +138,6 @@ export const Home = ({}: HomeTypes) => {
       console.log("NOT WORKING", error);
     }
   };
-  //error error TypeError: str.charCodeAt is not a function
 
   const submitLinkForm = async () => {
     await fetchSpotifyData();
@@ -149,8 +148,6 @@ export const Home = ({}: HomeTypes) => {
     ); // send song obj
     setSubmitLink("");
   };
-
-  // TODO: PASS DATA FROM FETCH REQ TO submitSong() to store in contract, send individual variables as to save on gas.
 
   const submitSong = async (
     songLink: string,
