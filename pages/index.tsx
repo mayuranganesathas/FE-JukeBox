@@ -25,6 +25,7 @@ export interface HomeTypes {}
 export const Home = ({}: HomeTypes) => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [submitLink, setSubmitLink] = useState("");
+  const [isError, setIsError] = useState(false);
   const [spotifyResponse, setSpotifyResponse] = useState<SpotifyData>({
     album: "",
     name: "",
@@ -54,6 +55,7 @@ export const Home = ({}: HomeTypes) => {
       let spotifyId = new URL(submitLink);
       return spotifyId.pathname.split("track/").slice(1);
     } catch (error) {
+      setIsError(true);
       console.log(error);
       alert(
         "Incorrect Spotify Link, Try ` https://open.spotify.com/track/15OlC497ScJt9N2BS8lOev?si=f99d587b90644e30` "
@@ -144,13 +146,18 @@ export const Home = ({}: HomeTypes) => {
 
   const submitLinkForm = async () => {
     await fetchSpotifyData();
-    submitSong(
-      spotifySongOb.songLink.toString(),
-      spotifySongOb.songTitle.toString(),
-      spotifySongOb.artistName.toString(),
-      spotifySongOb.albumImage.toString()
-    ); // send song obj
-    setSubmitLink("");
+
+    if (!isError) {
+      submitSong(
+        spotifySongOb.songLink.toString(),
+        spotifySongOb.songTitle.toString(),
+        spotifySongOb.artistName.toString(),
+        spotifySongOb.albumImage.toString()
+      ); // send song obj
+      setSubmitLink("");
+    } else {
+      alert("Big error pon ting");
+    }
   };
 
   const submitSong = async (
