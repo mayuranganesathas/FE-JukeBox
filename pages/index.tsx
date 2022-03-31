@@ -76,11 +76,13 @@ export const Home = ({}: HomeTypes) => {
       .then((data) => {
         console.log("Success:", data);
         setSpotifyResponse(data);
-        // spotifySongOb.albumImage = spotifyResponse.album.images[0].url;
         spotifySongOb.songTitle = spotifyResponse.name;
         spotifySongOb.artistName = spotifyResponse.artists[0].name;
         spotifySongOb.songLink = submitLink;
-        spotifySongOb.albumImage = spotifyResponse.artists.images[0].url;
+        spotifySongOb.albumImage =
+          spotifyResponse.album.images[0].url == undefined
+            ? "https://www.vuescript.com/wp-content/uploads/2018/11/Show-Loader-During-Image-Loading-vue-load-image.png"
+            : spotifyResponse.album.images[0].url;
       })
       .catch((error) => {
         alert(
@@ -143,10 +145,10 @@ export const Home = ({}: HomeTypes) => {
   const submitLinkForm = async () => {
     await fetchSpotifyData();
     submitSong(
-      submitLink.toString(),
-      spotifyResponse.name.toString(),
-      spotifyResponse.artists.toString(),
-      spotifyResponse.album.toString()
+      spotifySongOb.songLink.toString(),
+      spotifySongOb.songTitle.toString(),
+      spotifySongOb.artistName.toString(),
+      spotifySongOb.albumImage.toString()
     ); // send song obj
     setSubmitLink("");
   };
@@ -172,7 +174,8 @@ export const Home = ({}: HomeTypes) => {
         let linkTxn = await jukeBoxContract.jukeBoxPlay(
           songLink,
           songTitle,
-          artistName
+          artistName,
+          albumImage
         );
         let linkHistory = await jukeBoxContract.getJukeBoxData();
 
