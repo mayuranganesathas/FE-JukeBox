@@ -31,7 +31,7 @@ export const Home = ({}: HomeTypes) => {
     artists: [""],
     songLink: "",
   });
-  const contractAddress = "0x82e5AfBD14C61a936119c6Db0f4a24cBBaC1C9BB";
+  const contractAddress = "0xBb04174525b5554a8E2A5DDEEa02c83fe6dBB797";
   const contractABI = abi.abi;
   //object to be sent to the smart contract
   let spotifySongOb = {
@@ -80,6 +80,7 @@ export const Home = ({}: HomeTypes) => {
         spotifySongOb.songTitle = spotifyResponse.name;
         spotifySongOb.artistName = spotifyResponse.artists[0].name;
         spotifySongOb.songLink = submitLink;
+        spotifySongOb.albumImage = spotifyResponse.artists.images[0].url;
       })
       .catch((error) => {
         alert(
@@ -144,7 +145,8 @@ export const Home = ({}: HomeTypes) => {
     submitSong(
       submitLink.toString(),
       spotifyResponse.name.toString(),
-      spotifyResponse.artists.toString()
+      spotifyResponse.artists.toString(),
+      spotifyResponse.album.toString()
     ); // send song obj
     setSubmitLink("");
   };
@@ -152,7 +154,8 @@ export const Home = ({}: HomeTypes) => {
   const submitSong = async (
     songLink: string,
     songTitle: string,
-    artistName: string
+    artistName: string,
+    albumImage: string
   ) => {
     try {
       const { ethereum } = window;
